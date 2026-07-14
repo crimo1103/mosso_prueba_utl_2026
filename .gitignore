@@ -10,3 +10,6 @@ Thumbs.db
 
 # La base se versionará mientras no supere el límite indicado por la prueba.
 # db/puestos_2026.db
+.vs/
+data/
+db/puestos_2026.db
