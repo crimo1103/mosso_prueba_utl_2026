@@ -120,56 +120,79 @@ def obtener_ambitos(nomenclator: dict[str, Any], corporacion: str) -> list[dict[
     raise ValueError(f"No se encontraron ámbitos para {corporacion}")
 
 
-def es_descendiente(
-    node_id: int,
-    ancestor_id: int,
-    nodos: dict[int, dict[str, Any]],
-    memo: dict[tuple[int, int], bool],
-) -> bool:
-    clave = (node_id, ancestor_id)
-    if clave in memo:
-        return memo[clave]
-    if node_id == ancestor_id:
-        memo[clave] = True
-        return True
-    nodo = nodos[node_id]
-    padres = [pid for grupo in nodo.get("p", []) for pid in grupo.get("p", [])]
-    resultado = any(
-        pid in nodos and es_descendiente(pid, ancestor_id, nodos, memo)
-        for pid in padres
-    )
-    memo[clave] = resultado
-    return resultado
+def ids_hijos(nodo: dict[str, Any]) -> list[int]:
+    return [
+        entero(hijo_id)
+        for grupo in nodo.get("h", [])
+        for hijo_id in grupo.get("p", [])
+    ]
+
+
+def construir_nodos(ambitos: list[dict[str, Any]]) -> dict[int, dict[str, Any]]:
+    """Indexa nodos y completa padres usando las relaciones ``h`` del portal.
+
+    El nomenclátor no siempre expone una cadena de padres completa en ``p``.
+    Las relaciones de hijos ``h`` sí permiten reconstruirla de forma confiable.
+    """
+    nodos = {entero(n["i"]): dict(n) for n in ambitos}
+    padres_inferidos: dict[int, list[int]] = {}
+    for padre_id, nodo in nodos.items():
+        for hijo_id in ids_hijos(nodo):
+            padres_inferidos.setdefault(hijo_id, []).append(padre_id)
+    for nodo_id, nodo in nodos.items():
+        nodo["_padres"] = padres_inferidos.get(nodo_id, [])
+    return nodos
+
+
+def ids_padres(nodo: dict[str, Any]) -> list[int]:
+    explicitos = [
+        entero(pid)
+        for grupo in nodo.get("p", [])
+        for pid in grupo.get("p", [])
+    ]
+    inferidos = [entero(pid) for pid in nodo.get("_padres", [])]
+    return list(dict.fromkeys(explicitos + inferidos))
 
 
 def mesas_del_municipio(
     nomenclator: dict[str, Any], corporacion: str, municipio_codigo: str
-) -> list[dict[str, Any]]:
+) -> tuple[list[dict[str, Any]], dict[int, dict[str, Any]]]:
     ambitos = obtener_ambitos(nomenclator, corporacion)
-    nodos = {entero(n["i"]): n for n in ambitos}
+    nodos = construir_nodos(ambitos)
     municipio = next(
-        (n for n in ambitos if n.get("c") == municipio_codigo and entero(n.get("l")) == 3),
+        (
+            n
+            for n in nodos.values()
+            if str(n.get("c")) == municipio_codigo and entero(n.get("l")) == 3
+        ),
         None,
     )
     if municipio is None:
         raise ValueError(f"Municipio {municipio_codigo} no hallado en nomenclátor")
 
-    municipio_id = entero(municipio["i"])
-    memo: dict[tuple[int, int], bool] = {}
-    mesas = [
-        n
-        for n in ambitos
-        if entero(n.get("l")) == 7
-        and es_descendiente(entero(n["i"]), municipio_id, nodos, memo)
-    ]
-    return sorted(mesas, key=lambda n: str(n.get("c", "")))
+    pendientes = [entero(municipio["i"])]
+    visitados: set[int] = set()
+    mesas: list[dict[str, Any]] = []
+
+    while pendientes:
+        actual_id = pendientes.pop()
+        if actual_id in visitados or actual_id not in nodos:
+            continue
+        visitados.add(actual_id)
+        actual = nodos[actual_id]
+        if entero(actual.get("l")) == 7:
+            mesas.append(actual)
+            continue
+        pendientes.extend(ids_hijos(actual))
+
+    return sorted(mesas, key=lambda n: str(n.get("c", ""))), nodos
 
 
 def ancestro_nivel(
     nodo: dict[str, Any], nivel: int, nodos: dict[int, dict[str, Any]]
 ) -> dict[str, Any] | None:
     visitados: set[int] = set()
-    pendientes = [pid for grupo in nodo.get("p", []) for pid in grupo.get("p", [])]
+    pendientes = ids_padres(nodo)
     while pendientes:
         actual_id = pendientes.pop(0)
         if actual_id in visitados or actual_id not in nodos:
@@ -178,9 +201,7 @@ def ancestro_nivel(
         actual = nodos[actual_id]
         if entero(actual.get("l")) == nivel:
             return actual
-        pendientes.extend(
-            pid for grupo in actual.get("p", []) for pid in grupo.get("p", [])
-        )
+        pendientes.extend(ids_padres(actual))
     return None
 
 
@@ -204,8 +225,6 @@ def parsear_resultado_mesa(
     registros: list[dict[str, Any]] = []
 
     for camara in payload.get("camaras", []):
-        # Cámara territorial=1 y Senado nacional=0. Se omiten circunscripciones
-        # especiales para mantener comparabilidad en los retos analíticos.
         cam = str(camara.get("cam", ""))
         if corporacion == "CA" and cam != "1":
             continue
@@ -259,11 +278,15 @@ def extraer_desde_api(
     for nombre_municipio in municipios:
         municipio = MUNICIPIOS[nombre_municipio]
         for corporacion in CORPORACIONES:
-            ambitos = obtener_ambitos(nomenclator, corporacion)
-            nodos = {entero(n["i"]): n for n in ambitos}
-            mesas = mesas_del_municipio(nomenclator, corporacion, municipio.codigo)
+            mesas, nodos = mesas_del_municipio(
+                nomenclator, corporacion, municipio.codigo
+            )
             logging.info("%s | %s | mesas=%s", municipio.nombre, corporacion, len(mesas))
             if preflight:
+                if not mesas:
+                    raise ValueError(
+                        f"No se encontraron mesas para {municipio.nombre} | {corporacion}"
+                    )
                 continue
 
             for indice, mesa in enumerate(mesas, start=1):
@@ -322,7 +345,9 @@ def validar_municipios(nombres: Iterable[str]) -> list[str]:
 def guardar_salida(registros: list[dict[str, Any]], destino: Path = OUTPUT_FILE) -> None:
     destino.parent.mkdir(parents=True, exist_ok=True)
     temporal = destino.with_suffix(".tmp")
-    temporal.write_text(json.dumps(registros, ensure_ascii=False, indent=2), encoding="utf-8")
+    temporal.write_text(
+        json.dumps(registros, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
     temporal.replace(destino)
     logging.info("Salida guardada: %s | filas=%s", destino, len(registros))
 
