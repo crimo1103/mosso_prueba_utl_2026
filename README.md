@@ -3,7 +3,7 @@
 ## Candidato
 
 - **Nombre:** Cristian Vidal Mosso Coy
-- **Email:** PENDIENTE
+- **Email:** crimo1103@gmail.com
 - **Repositorio:** https://github.com/crimo1103/mosso_prueba_utl_2026
 
 ## Instalación
