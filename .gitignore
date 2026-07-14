@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log
+
+# La base se versionará mientras no supere el límite indicado por la prueba.
+# db/puestos_2026.db
