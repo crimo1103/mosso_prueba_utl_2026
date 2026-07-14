@@ -1,0 +1,571 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados Electorales Boyac&aacute; 2026</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --verde-950: #062f22;
+            --verde-900: #0b3d2e;
+            --verde-800: #0f5138;
+            --verde-700: #146c43;
+            --verde-600: #198754;
+            --verde-500: #22a35a;
+            --verde-400: #49b978;
+            --verde-300: #86d7a7;
+            --verde-200: #c8efd7;
+            --verde-100: #edf9f1;
+            --amarillo-500: #f4c542;
+            --gris-950: #111914;
+            --gris-700: #465149;
+            --gris-500: #7b877f;
+            --gris-200: #e9eeeb;
+            --gris-100: #f7faf8;
+            --blanco: #fff;
+            --borde: rgba(20,108,67,.13);
+            --sombra: 0 20px 50px rgba(6,47,34,.11);
+            --sombra-suave: 0 10px 28px rgba(6,47,34,.08)
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+            color: var(--gris-950);
+            background: radial-gradient(circle at 92% 4%,rgba(73,185,120,.22),transparent 28%),radial-gradient(circle at 10% 20%,rgba(244,197,66,.12),transparent 24%),linear-gradient(180deg,#f2faf5 0%,#eef7f1 50%,#f8faf9 100%)
+        }
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            padding: 48px 28px 74px;
+            color: var(--blanco);
+            background: linear-gradient(135deg,rgba(6,47,34,.99),rgba(20,108,67,.96));
+            border-bottom-left-radius: 38px;
+            border-bottom-right-radius: 38px;
+            box-shadow: 0 24px 60px rgba(6,47,34,.22)
+        }
+
+            .hero:before, .hero:after {
+                content: "";
+                position: absolute;
+                border-radius: 50%;
+                pointer-events: none
+            }
+
+            .hero:before {
+                width: 320px;
+                height: 320px;
+                right: -95px;
+                top: -120px;
+                background: rgba(255,255,255,.08)
+            }
+
+            .hero:after {
+                width: 220px;
+                height: 220px;
+                right: 150px;
+                bottom: -145px;
+                background: rgba(244,197,66,.16)
+            }
+
+        .hero-contenido {
+            position: relative;
+            z-index: 2;
+            max-width: 1480px;
+            margin: 0 auto
+        }
+
+        .hero-etiqueta {
+            display: inline-flex;
+            padding: 7px 12px;
+            margin-bottom: 16px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: .07em;
+            text-transform: uppercase;
+            color: var(--verde-950);
+            background: var(--amarillo-500)
+        }
+
+        .hero h1 {
+            margin: 0;
+            max-width: 860px;
+            font-size: clamp(34px,5vw,58px);
+            line-height: 1.02;
+            letter-spacing: -1.8px
+        }
+
+        .hero p {
+            margin: 18px 0 0;
+            max-width: 850px;
+            font-size: 17px;
+            line-height: 1.65;
+            color: rgba(255,255,255,.84)
+        }
+
+        .hero-detalles {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 24px
+        }
+
+        .hero-chip {
+            display: inline-flex;
+            padding: 8px 12px;
+            border: 1px solid rgba(255,255,255,.16);
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+            color: rgba(255,255,255,.9);
+            background: rgba(255,255,255,.08);
+            backdrop-filter: blur(12px)
+        }
+
+        main {
+            position: relative;
+            z-index: 5;
+            max-width: 1480px;
+            margin: -38px auto 0;
+            padding: 0 24px 40px
+        }
+
+        .estado {
+            margin-bottom: 18px;
+            padding: 16px 18px;
+            border: 1px solid rgba(244,197,66,.5);
+            border-radius: 16px;
+            font-weight: 700;
+            color: #725900;
+            background: #fff6cf;
+            box-shadow: var(--sombra-suave)
+        }
+
+        .barra-filtros {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: end;
+            padding: 20px;
+            margin-bottom: 24px;
+            border: 1px solid var(--borde);
+            border-radius: 22px;
+            background: rgba(255,255,255,.95);
+            box-shadow: var(--sombra);
+            backdrop-filter: blur(14px)
+        }
+
+        .campo {
+            flex: 1;
+            min-width: 250px
+        }
+
+            .campo label {
+                display: block;
+                margin-bottom: 8px;
+                font-size: 12px;
+                font-weight: 900;
+                letter-spacing: .08em;
+                text-transform: uppercase;
+                color: var(--verde-800)
+            }
+
+            .campo select {
+                width: 100%;
+                padding: 13px 14px;
+                border: 1px solid rgba(20,108,67,.18);
+                border-radius: 13px;
+                font-size: 15px;
+                color: var(--gris-950);
+                background: var(--blanco);
+                outline: none
+            }
+
+                .campo select:hover, .campo select:focus {
+                    border-color: var(--verde-500);
+                    box-shadow: 0 0 0 4px rgba(34,163,90,.12)
+                }
+
+        .tarjetas {
+            display: grid;
+            grid-template-columns: repeat(4,minmax(190px,1fr));
+            gap: 18px;
+            margin-bottom: 24px
+        }
+
+        .tarjeta {
+            position: relative;
+            overflow: hidden;
+            min-height: 150px;
+            padding: 22px;
+            border: 1px solid var(--borde);
+            border-radius: 22px;
+            background: linear-gradient(145deg,rgba(255,255,255,.98),rgba(237,249,241,.96));
+            box-shadow: var(--sombra-suave);
+            transition: .22s
+        }
+
+            .tarjeta:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 20px 38px rgba(6,47,34,.14)
+            }
+
+            .tarjeta:before {
+                content: "";
+                position: absolute;
+                width: 104px;
+                height: 104px;
+                right: -26px;
+                top: -28px;
+                border-radius: 50%;
+                background: linear-gradient(135deg,rgba(34,163,90,.2),rgba(244,197,66,.18))
+            }
+
+        .tarjeta-icono {
+            position: relative;
+            z-index: 2;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            margin-bottom: 16px;
+            border-radius: 13px;
+            color: var(--blanco);
+            background: linear-gradient(135deg,var(--verde-800),var(--verde-500));
+            box-shadow: 0 8px 18px rgba(20,108,67,.2)
+        }
+
+            .tarjeta-icono svg {
+                width: 23px;
+                height: 23px;
+                stroke: currentColor;
+                stroke-width: 1.8;
+                fill: none;
+                stroke-linecap: round;
+                stroke-linejoin: round
+            }
+
+        .tarjeta-titulo {
+            position: relative;
+            z-index: 2;
+            margin-bottom: 8px;
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: .075em;
+            text-transform: uppercase;
+            color: var(--gris-700)
+        }
+
+        .tarjeta-valor {
+            position: relative;
+            z-index: 2;
+            font-size: clamp(29px,3vw,40px);
+            line-height: 1;
+            font-weight: 900;
+            letter-spacing: -1.1px;
+            color: var(--verde-900)
+        }
+
+        .grid-doble {
+            display: grid;
+            grid-template-columns: repeat(2,minmax(0,1fr));
+            gap: 22px;
+            margin-bottom: 24px
+        }
+
+        .panel {
+            overflow: hidden;
+            padding: 22px;
+            border: 1px solid var(--borde);
+            border-radius: 22px;
+            background: rgba(255,255,255,.97);
+            box-shadow: var(--sombra);
+            transition: .22s
+        }
+
+            .panel:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 22px 48px rgba(6,47,34,.13)
+            }
+
+        .panel-cabecera {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 18px
+        }
+
+        .panel-titulo {
+            margin: 0;
+            font-size: 21px;
+            line-height: 1.2;
+            letter-spacing: -.4px;
+            color: var(--verde-950)
+        }
+
+            .panel-titulo:after {
+                content: "";
+                display: block;
+                width: 52px;
+                height: 4px;
+                margin-top: 10px;
+                border-radius: 999px;
+                background: linear-gradient(90deg,var(--verde-500),var(--amarillo-500))
+            }
+
+        .panel-descripcion {
+            margin: 12px 0 0;
+            font-size: 14px;
+            line-height: 1.55;
+            color: var(--gris-700)
+        }
+
+        .panel-etiqueta {
+            flex-shrink: 0;
+            padding: 7px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: .05em;
+            text-transform: uppercase;
+            color: var(--verde-800);
+            background: var(--verde-100);
+            border: 1px solid var(--verde-200)
+        }
+
+        .grafico-contenedor {
+            position: relative;
+            min-height: 360px
+        }
+
+        canvas {
+            max-height: 390px
+        }
+
+        .tabla-contenedor {
+            overflow: auto;
+            max-height: 500px;
+            border: 1px solid var(--gris-200);
+            border-radius: 16px;
+            background: var(--blanco)
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px
+        }
+
+        thead {
+            position: sticky;
+            top: 0;
+            z-index: 4;
+            color: var(--blanco);
+            background: linear-gradient(135deg,var(--verde-900),var(--verde-600))
+        }
+
+        th, td {
+            padding: 12px 13px;
+            border-bottom: 1px solid var(--gris-200);
+            text-align: left;
+            white-space: nowrap
+        }
+
+        th {
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: .06em;
+            text-transform: uppercase
+        }
+
+        tbody tr:nth-child(even) {
+            background: var(--gris-100)
+        }
+
+        tbody tr:hover {
+            background: var(--verde-100)
+        }
+
+        .numero {
+            text-align: right;
+            font-variant-numeric: tabular-nums
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 42px;
+            padding: 5px 9px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: .04em
+        }
+
+        .badge-ca {
+            color: #145478;
+            background: #dceef8;
+            border: 1px solid #b9dced
+        }
+
+        .badge-se {
+            color: #652174;
+            background: #eee0f2;
+            border: 1px solid #ddc5e5
+        }
+
+        .posicion {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            font-weight: 900;
+            color: var(--blanco);
+            background: linear-gradient(135deg,var(--verde-800),var(--verde-500))
+        }
+
+        .panel-amplio {
+            margin-bottom: 24px
+        }
+
+        footer {
+            padding: 30px 24px 38px;
+            text-align: center;
+            font-size: 13px;
+            color: var(--gris-500)
+        }
+
+            footer:before {
+                content: "";
+                display: block;
+                width: 70px;
+                height: 4px;
+                margin: 0 auto 14px;
+                border-radius: 999px;
+                background: linear-gradient(90deg,var(--verde-500),var(--amarillo-500))
+            }
+
+        @media(max-width:1120px) {
+            .tarjetas {
+                grid-template-columns: repeat(2,minmax(180px,1fr))
+            }
+        }
+
+        @media(max-width:900px) {
+            .grid-doble {
+                grid-template-columns: 1fr
+            }
+
+            main {
+                padding: 0 16px 34px
+            }
+        }
+
+        @media(max-width:640px) {
+            .hero {
+                padding: 36px 20px 62px;
+                border-bottom-left-radius: 26px;
+                border-bottom-right-radius: 26px
+            }
+
+                .hero h1 {
+                    font-size: 34px
+                }
+
+                .hero p {
+                    font-size: 15px
+                }
+
+            .tarjetas {
+                grid-template-columns: 1fr
+            }
+
+            .campo {
+                min-width: 100%
+            }
+
+            .panel {
+                padding: 17px;
+                border-radius: 18px
+            }
+
+            .panel-cabecera {
+                flex-direction: column
+            }
+
+            th, td {
+                padding: 10px
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="hero">
+        <div class="hero-contenido">
+            <div class="hero-etiqueta">Anal&iacute;tica electoral</div>
+            <h1>Resultados Electorales Boyac&aacute; 2026</h1>
+            <p>An&aacute;lisis interactivo de resultados electorales para Tunja, Paipa, Sogamoso y Duitama, con enfoque en comparaci&oacute;n por corporaci&oacute;n, comportamiento de partidos, dominancia por mesa y atribuci&oacute;n determin&iacute;stica.</p>
+            <div class="hero-detalles"><span class="hero-chip">Tunja</span><span class="hero-chip">Paipa</span><span class="hero-chip">Sogamoso</span><span class="hero-chip">Duitama</span><span class="hero-chip">C&aacute;mara y Senado</span></div>
+        </div>
+    </header>
+    <main>
+        <div id="estado" class="estado">Cargando informaci&oacute;n desde data.json...</div>
+        <section class="barra-filtros">
+            <div class="campo"><label for="municipioFiltro">Municipio</label><select id="municipioFiltro"><option value="TODOS">Todos los municipios</option></select></div>
+            <div class="campo"><label for="corporacionFiltro">Corporaci&oacute;n</label><select id="corporacionFiltro"><option value="TODAS">Todas las corporaciones</option><option value="CA">C&aacute;mara de Representantes</option><option value="SE">Senado</option></select></div>
+        </section>
+        <section class="tarjetas">
+            <article class="tarjeta"><div class="tarjeta-icono"><svg viewBox="0 0 24 24"><path d="M12 3l7 4v10l-7 4-7-4V7z"></path><path d="M9 10h6"></path><path d="M9 14h6"></path></svg></div><div class="tarjeta-titulo">Municipios analizados</div><div class="tarjeta-valor" id="kpiMunicipios">0</div></article>
+            <article class="tarjeta"><div class="tarjeta-icono"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"></path><path d="M5 10v10h14V10"></path><path d="M9 20v-6h6v6"></path></svg></div><div class="tarjeta-titulo">Puestos de votaci&oacute;n</div><div class="tarjeta-valor" id="kpiPuestos">0</div></article>
+            <article class="tarjeta"><div class="tarjeta-icono"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"></rect><path d="M8 8h8"></path><path d="M8 12h8"></path><path d="M8 16h5"></path></svg></div><div class="tarjeta-titulo">Mesas electorales</div><div class="tarjeta-valor" id="kpiMesas">0</div></article>
+            <article class="tarjeta"><div class="tarjeta-icono"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"></circle><circle cx="17" cy="9" r="2"></circle><path d="M3 20c0-4 2.5-6 6-6s6 2 6 6"></path><path d="M15 15c3 0 5 1.5 5 5"></path></svg></div><div class="tarjeta-titulo">Total de votantes</div><div class="tarjeta-valor" id="kpiVotantes">0</div></article>
+        </section>
+        <section class="grid-doble">
+            <article class="panel"><div class="panel-cabecera"><div><h2 class="panel-titulo">Votos por municipio</h2><p class="panel-descripcion">Comparaci&oacute;n del total de votos entre C&aacute;mara y Senado por municipio.</p></div><span class="panel-etiqueta">Comparativo</span></div><div class="grafico-contenedor"><canvas id="graficoVotosMunicipio"></canvas></div></article>
+            <article class="panel"><div class="panel-cabecera"><div><h2 class="panel-titulo">Partidos con mayor votaci&oacute;n</h2><p class="panel-descripcion">Top de partidos por municipio y corporaci&oacute;n, ordenados por votaci&oacute;n agregada.</p></div><span class="panel-etiqueta">Top partidos</span></div><div class="grafico-contenedor"><canvas id="graficoTopPartidos"></canvas></div></article>
+        </section>
+        <section class="panel panel-amplio"><div class="panel-cabecera"><div><h2 class="panel-titulo">Comparaci&oacute;n Alianza Verde</h2><p class="panel-descripcion">Comparaci&oacute;n por puesto entre C&aacute;mara, c&oacute;digo 5, y Senado, c&oacute;digo 57. La raz&oacute;n corresponde a votos Senado divididos entre votos C&aacute;mara.</p></div><span class="panel-etiqueta">SE / CA</span></div><div class="tabla-contenedor"><table><thead><tr><th>Municipio</th><th>C&oacute;digo puesto</th><th>Puesto</th><th class="numero">Votos C&aacute;mara</th><th class="numero">Votos Senado</th><th class="numero">Raz&oacute;n SE/CA</th></tr></thead><tbody id="tablaVerde"></tbody></table></div></section>
+        <section class="grid-doble">
+            <article class="panel"><div class="panel-cabecera"><div><h2 class="panel-titulo">Top 5 por atribuci&oacute;n</h2><p class="panel-descripcion">Estimaci&oacute;n determin&iacute;stica de votos Senado atribuibles a candidatos de C&aacute;mara.</p></div><span class="panel-etiqueta">Modelo</span></div><div class="tabla-contenedor"><table><thead><tr><th>Posici&oacute;n</th><th>Candidato</th><th>Partido</th><th class="numero">Votos CA</th><th class="numero">Atribuci&oacute;n SE</th></tr></thead><tbody id="tablaAtribucion"></tbody></table></div></article>
+            <article class="panel"><div class="panel-cabecera"><div><h2 class="panel-titulo">Dominancia superior al 60 %</h2><p class="panel-descripcion">Candidatos que concentran m&aacute;s del 60 % de los votos de su partido en una mesa.</p></div><span class="panel-etiqueta">Dominancia</span></div><div class="tabla-contenedor"><table><thead><tr><th>Municipio</th><th>Puesto</th><th>Mesa</th><th>Corporaci&oacute;n</th><th>Candidato</th><th class="numero">Porcentaje</th></tr></thead><tbody id="tablaDominancia"></tbody></table></div></article>
+        </section>
+    </main>
+    <footer>Prueba t&eacute;cnica UTL Senado Boyac&aacute; 2026</footer>
+    <script>
+        let datos = null, graficoVotos = null, graficoPartidos = null;
+        const formatoNumero = new Intl.NumberFormat("es-CO");
+        const formatoDecimal = new Intl.NumberFormat("es-CO", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        const paletaPartidos = ["#0f5138", "#146c43", "#198754", "#22a35a", "#49b978", "#86d7a7", "#f4c542", "#d4a900", "#7cae90", "#0b3d2e"];
+        Chart.defaults.font.family = "Inter, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif"; Chart.defaults.color = "#465149";
+        async function cargarDatos() { try { const respuesta = await fetch("data.json"); if (!respuesta.ok) throw new Error(`No fue posible cargar data.json. HTTP ${respuesta.status}`); datos = await respuesta.json(); cargarFiltros(); actualizarDashboard(); document.getElementById("estado").style.display = "none" } catch (error) { const estado = document.getElementById("estado"); estado.textContent = "Error al cargar data.json: " + error.message + ". Abra el dashboard mediante un servidor local."; console.error(error) } }
+        function cargarFiltros() { const selector = document.getElementById("municipioFiltro"); datos.municipios.forEach(m => { const o = document.createElement("option"); o.value = m; o.textContent = m; selector.appendChild(o) }); selector.addEventListener("change", actualizarDashboard); document.getElementById("corporacionFiltro").addEventListener("change", actualizarDashboard) }
+        function obtenerFiltros() { return { municipio: document.getElementById("municipioFiltro").value, corporacion: document.getElementById("corporacionFiltro").value } }
+        function actualizarDashboard() { const f = obtenerFiltros(); actualizarKpis(f); actualizarGraficoVotos(f); actualizarGraficoPartidos(f); actualizarTablaVerde(f); actualizarTablaAtribucion(); actualizarTablaDominancia(f) }
+        function actualizarKpis(f) { const filas = datos.resumen_municipios.filter(x => f.municipio === "TODOS" || x.municipio === f.municipio); document.getElementById("kpiMunicipios").textContent = formatoNumero.format(filas.length); document.getElementById("kpiPuestos").textContent = formatoNumero.format(filas.reduce((t, x) => t + Number(x.puestos || 0), 0)); document.getElementById("kpiMesas").textContent = formatoNumero.format(filas.reduce((t, x) => t + Number(x.mesas || 0), 0)); document.getElementById("kpiVotantes").textContent = formatoNumero.format(filas.reduce((t, x) => t + Number(x.total_votantes || 0), 0)) }
+        function actualizarGraficoVotos(f) { let filas = datos.votos_por_municipio.filter(x => f.municipio === "TODOS" || x.municipio === f.municipio); if (f.corporacion !== "TODAS") filas = filas.filter(x => x.corporacion === f.corporacion); const municipios = [...new Set(filas.map(x => x.municipio))]; const corporaciones = f.corporacion === "TODAS" ? ["CA", "SE"] : [f.corporacion]; const datasets = corporaciones.map(c => ({ label: c === "CA" ? "C\u00e1mara" : "Senado", data: municipios.map(m => { const x = filas.find(i => i.municipio === m && i.corporacion === c); return x ? Number(x.votos) : 0 }), backgroundColor: c === "CA" ? "rgba(34,163,90,.82)" : "rgba(244,197,66,.88)", borderColor: c === "CA" ? "#146c43" : "#c79a00", borderWidth: 1, borderRadius: 10, borderSkipped: false })); if (graficoVotos) graficoVotos.destroy(); graficoVotos = new Chart(document.getElementById("graficoVotosMunicipio"), { type: "bar", data: { labels: municipios, datasets }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: "top", labels: { usePointStyle: true, pointStyle: "circle", padding: 18 } }, tooltip: { backgroundColor: "#0b3d2e", padding: 12, callbacks: { label: c => `${c.dataset.label}: ${formatoNumero.format(c.raw)}` } } }, scales: { x: { grid: { display: false } }, y: { beginAtZero: true, grid: { color: "rgba(20,108,67,.08)" }, ticks: { callback: v => formatoNumero.format(v) } } } } }) }
+        function actualizarGraficoPartidos(f) { let filas = datos.top_partidos.filter(x => f.municipio === "TODOS" || x.municipio === f.municipio); if (f.corporacion !== "TODAS") filas = filas.filter(x => x.corporacion === f.corporacion); const agrupados = {}; filas.forEach(x => { const k = `${x.codigo_partido} - ${x.partido}`; if (!agrupados[k]) agrupados[k] = { votos: 0, color: x.color_hex || null }; agrupados[k].votos += Number(x.votos) }); const ordenados = Object.entries(agrupados).sort((a, b) => b[1].votos - a[1].votos).slice(0, 10); if (graficoPartidos) graficoPartidos.destroy(); graficoPartidos = new Chart(document.getElementById("graficoTopPartidos"), { type: "bar", data: { labels: ordenados.map(x => x[0]), datasets: [{ label: "Votos", data: ordenados.map(x => x[1].votos), backgroundColor: ordenados.map((x, i) => x[1].color || paletaPartidos[i % paletaPartidos.length]), borderRadius: 9, borderSkipped: false }] }, options: { indexAxis: "y", responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { backgroundColor: "#0b3d2e", padding: 12, callbacks: { label: c => "Votos: " + formatoNumero.format(c.raw) } } }, scales: { x: { beginAtZero: true, grid: { color: "rgba(20,108,67,.08)" }, ticks: { callback: v => formatoNumero.format(v) } }, y: { grid: { display: false } } } } }) }
+        function actualizarTablaVerde(f) { const cuerpo = document.getElementById("tablaVerde"); cuerpo.innerHTML = ""; datos.alianza_verde.filter(x => f.municipio === "TODOS" || x.municipio === f.municipio).forEach(x => { const tr = document.createElement("tr"); tr.innerHTML = `<td>${x.municipio}</td><td>${x.codigo_puesto}</td><td>${x.puesto}</td><td class="numero">${formatoNumero.format(x.votos_camara)}</td><td class="numero">${formatoNumero.format(x.votos_senado)}</td><td class="numero">${x.razon_senado_camara === null ? "N/D" : formatoDecimal.format(x.razon_senado_camara)}</td>`; cuerpo.appendChild(tr) }) }
+        function actualizarTablaAtribucion() { const cuerpo = document.getElementById("tablaAtribucion"); cuerpo.innerHTML = ""; datos.top_atribucion.forEach((x, i) => { const tr = document.createElement("tr"); tr.innerHTML = `<td><span class="posicion">${i + 1}</span></td><td>${x.candidato}</td><td>${x.partido}</td><td class="numero">${formatoNumero.format(x.votos_candidato_ca)}</td><td class="numero">${formatoDecimal.format(x.atribucion_se)}</td>`; cuerpo.appendChild(tr) }) }
+        function actualizarTablaDominancia(f) { const cuerpo = document.getElementById("tablaDominancia"); cuerpo.innerHTML = ""; let filas = datos.dominancia_60.filter(x => f.municipio === "TODOS" || x.municipio === f.municipio); if (f.corporacion !== "TODAS") filas = filas.filter(x => x.corporacion === f.corporacion); filas.slice(0, 100).forEach(x => { const tr = document.createElement("tr"); tr.innerHTML = `<td>${x.municipio}</td><td>${x.puesto}</td><td>${x.mesa}</td><td><span class="badge ${x.corporacion === "CA" ? "badge-ca" : "badge-se"}">${x.corporacion}</span></td><td>${x.candidato}</td><td class="numero">${formatoDecimal.format(x.porcentaje)} %</td>`; cuerpo.appendChild(tr) }) }
+        cargarDatos();
+    </script>
+</body>
+</html>
