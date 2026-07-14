@@ -47,6 +47,9 @@ CREATE TABLE IF NOT EXISTS mesas (
 
 -- ============================================================
 -- Partidos y movimientos políticos
+-- El mismo nombre normalizado puede tener códigos distintos según
+-- la corporación (ej.: Alianza Verde CA=5 y SE=57), por lo que la
+-- deduplicación técnica se realiza por código oficial.
 -- ============================================================
 CREATE TABLE IF NOT EXISTS partidos (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -54,8 +57,7 @@ CREATE TABLE IF NOT EXISTS partidos (
     nombre TEXT NOT NULL,
     nombre_normalizado TEXT NOT NULL,
     color_hex TEXT,
-    UNIQUE (codigo),
-    UNIQUE (nombre_normalizado)
+    UNIQUE (codigo)
 );
 
 -- ============================================================
@@ -163,5 +165,8 @@ CREATE INDEX IF NOT EXISTS idx_resultados_partido_lookup
     ON resultados_partido (partido_id, corporacion, mesa_id);
 
 -- Optimiza búsquedas por nombre normalizado durante el ETL.
+CREATE INDEX IF NOT EXISTS idx_partidos_nombre_normalizado
+    ON partidos (nombre_normalizado);
+
 CREATE INDEX IF NOT EXISTS idx_candidatos_nombre_normalizado
     ON candidatos (nombre_normalizado);
