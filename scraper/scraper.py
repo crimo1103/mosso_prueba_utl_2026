@@ -10,6 +10,7 @@ import argparse
 import json
 import logging
 import sys
+import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable
@@ -85,11 +86,37 @@ def crear_sesion() -> requests.Session:
     return sesion
 
 
-def solicitar_json(session: requests.Session, url: str, timeout: int = 45) -> Any:
-    logging.debug("GET %s", url)
-    response = session.get(url, timeout=timeout)
-    response.raise_for_status()
-    return response.json()
+def solicitar_json(
+    session: requests.Session,
+    url: str,
+    timeout: int = 45,
+    intentos: int = 6,
+) -> Any:
+    """Obtiene JSON y reintenta también respuestas HTTP 200 vacías/no JSON."""
+    ultimo_error: Exception | None = None
+    for intento in range(1, intentos + 1):
+        try:
+            logging.debug("GET %s | intento=%s/%s", url, intento, intentos)
+            response = session.get(url, timeout=timeout)
+            response.raise_for_status()
+            if not response.content or not response.text.strip():
+                raise ValueError(f"Respuesta vacía HTTP {response.status_code}")
+            return response.json()
+        except (requests.RequestException, requests.exceptions.JSONDecodeError, ValueError) as exc:
+            ultimo_error = exc
+            if intento == intentos:
+                break
+            espera = min(2 ** (intento - 1), 16)
+            logging.warning(
+                "Respuesta temporal inválida; reintento %s/%s en %ss | %s | %s",
+                intento,
+                intentos,
+                espera,
+                url,
+                exc,
+            )
+            time.sleep(espera)
+    raise ValueError(f"No fue posible obtener JSON válido tras {intentos} intentos: {url}") from ultimo_error
 
 
 def entero(valor: Any, default: int = 0) -> int:
@@ -144,8 +171,6 @@ def puestos_del_municipio(
         else:
             pendientes.extend(ids_hijos(nodo))
 
-    # Respaldo: algunos puestos no aparecen enlazados como hijos, pero su código
-    # siempre inicia con el código municipal y tienen nivel 6.
     for nodo_id, nodo in nodos.items():
         if entero(nodo.get("l")) == 6 and str(nodo.get("c", "")).startswith(municipio_codigo):
             encontrados[nodo_id] = nodo
