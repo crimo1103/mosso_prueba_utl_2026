@@ -1,0 +1,11 @@
+{
+  "proyecto": "Prueba UTL Senado Boyaca 2026",
+  "repositorio": "mosso_prueba_utl_2026",
+  "estado": "COMPLETO",
+  "ejemplo_archivo": {
+    "ruta": "README.md",
+    "existe": true,
+    "tamano_bytes": 1234,
+    "sha256": "hash_sha256_de_ejemplo"
+  }
+}

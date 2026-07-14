@@ -1,0 +1,130 @@
+{
+  "proyecto": "Prueba UTL Senado Boyaca 2026",
+  "repositorio": "mosso_prueba_utl_2026",
+  "autor": "Cristian Vidal Mosso Coy",
+  "fecha_generacion_utc": "2026-07-14T06:27:37.582653+00:00",
+  "municipios": [
+    "Tunja",
+    "Paipa",
+    "Sogamoso",
+    "Duitama"
+  ],
+  "componentes": {
+    "scraper": true,
+    "base_datos_sqlite": true,
+    "etl": true,
+    "consultas_sql": 3,
+    "dashboard": true,
+    "visualizaciones": 2
+  },
+  "archivos": [
+    {
+      "ruta": "README.md",
+      "existe": true,
+      "tamano_bytes": 1703,
+      "sha256": "603af3a797de395120810b415b9232f060a1b4647255ac320b43cd6d2cb92f5b"
+    },
+    {
+      "ruta": "requirements.txt",
+      "existe": true,
+      "tamano_bytes": 86,
+      "sha256": "92d0cf8a780271e6f4239011100025058b21ec730c57fc5de383c00e00e837e8"
+    },
+    {
+      "ruta": "scraper/scraper.py",
+      "existe": true,
+      "tamano_bytes": 12575,
+      "sha256": "705435cc47678f883219c893c2d5d227d2f006f82120d81939bbea56f8e266db"
+    },
+    {
+      "ruta": "db/schema.sql",
+      "existe": true,
+      "tamano_bytes": 6871,
+      "sha256": "9dc4b3e9118408937b441ec36e1efad963b856696fa29c6c6c58eda9189af0ff"
+    },
+    {
+      "ruta": "db/etl.py",
+      "existe": true,
+      "tamano_bytes": 15433,
+      "sha256": "88afee0de414cc64e36ec5247aa5ae0f99eaefd5a3404e133b696a1df6fa65f1"
+    },
+    {
+      "ruta": "sql/tarea_3_1.sql",
+      "existe": true,
+      "tamano_bytes": 1700,
+      "sha256": "d6230ebfd0ab8b5f3fea6dd20333788a4b0d427ea78fca103f5b1ae2bce3d0ef"
+    },
+    {
+      "ruta": "sql/tarea_3_2.sql",
+      "existe": true,
+      "tamano_bytes": 1678,
+      "sha256": "affc83e16930fd6a4ebeb1e9a5f68c5e6e14088974da8c5426c34961d658f340"
+    },
+    {
+      "ruta": "sql/tarea_3_3.sql",
+      "existe": true,
+      "tamano_bytes": 3190,
+      "sha256": "3c62a7d48c1299dd626088054a22e2285d16cb5bbcd4c5124bf97c094ff9e5a7"
+    },
+    {
+      "ruta": "dashboard/export_data.py",
+      "existe": true,
+      "tamano_bytes": 12718,
+      "sha256": "13e8f8ff8d9dc7e07a52601b3d5afef3d3128a4d3fda87fda8457215131164d7"
+    },
+    {
+      "ruta": "dashboard/data.json",
+      "existe": true,
+      "tamano_bytes": 129635,
+      "sha256": "830fefedd8e6d48a415f1daebcec8eb15cc9fb4d5dc2d84a84d2244ae713304e"
+    },
+    {
+      "ruta": "dashboard/index.html",
+      "existe": true,
+      "tamano_bytes": 27431,
+      "sha256": "d8ccfc510ada98a5246e6c43ddf3ecdf8554d812780ae9186fdfb05173558077"
+    },
+    {
+      "ruta": "viz/participacion_municipio.py",
+      "existe": true,
+      "tamano_bytes": 3005,
+      "sha256": "2f52ad355be0a693a53018228a1c8d1739fa017b439cae43f649eb8fe42f727a"
+    },
+    {
+      "ruta": "viz/participacion_municipio.png",
+      "existe": true,
+      "tamano_bytes": 72317,
+      "sha256": "472e0737d88640f1d5c2ef56675b386325aae01851c0a0b85235941192cf9783"
+    },
+    {
+      "ruta": "viz/comparacion_verde.py",
+      "existe": true,
+      "tamano_bytes": 4427,
+      "sha256": "f727f23548e07d92c14afc277eeabc21cd8741ed95a7967cc827ce4ad6a74d5c"
+    },
+    {
+      "ruta": "viz/comparacion_verde.png",
+      "existe": true,
+      "tamano_bytes": 69923,
+      "sha256": "d30d588c015703164d45c5c3592c2e3a7c203fef753f344ab5192ed409606f1c"
+    },
+    {
+      "ruta": "outputs/generar_manifest.py",
+      "existe": true,
+      "tamano_bytes": 4624,
+      "sha256": "d6f161deb016fac300a4c0ba4bd1bde4c25c9874b16736e88662d573866f9149"
+    }
+  ],
+  "resumen": {
+    "total_archivos_requeridos": 16,
+    "total_archivos_encontrados": 16,
+    "total_archivos_faltantes": 0,
+    "archivos_faltantes": [],
+    "estado": "COMPLETO"
+  },
+  "notas": [
+    "La base de datos db/puestos_2026.db se genera localmente mediante el proceso ETL.",
+    "El archivo dashboard/data.json se genera con dashboard/export_data.py.",
+    "Las imágenes PNG se generan ejecutando los scripts de la carpeta viz."
+  ]
+}
